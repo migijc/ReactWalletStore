@@ -1,45 +1,53 @@
 import React, { useState } from "react";
 import {RiShoppingCartLine} from 'react-icons/ri'
-import {IoIosMenu} from 'react-icons/io'
+import {IoIosMenu, IoMdClose} from 'react-icons/io'
+import { Link } from "react-router-dom";
 
 
 export default function Menu() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+    function handleMenuClick(){
+        setIsMenuOpen(!isMenuOpen)
+    }
+
     return (
         <div className="menu-container">
-            {/* <nav className="navigation-wrapper">
-                <ul className="nav-list">
-                    <li>Home</li>
-                    <li>Shop</li>
-                    <li>Contact</li>
-                </ul>
-            </nav> */}
-            <div style={{flex:1}}> <IoIosMenu style={{color: "white", fontSize: '2.3rem'}}/> </div>
+            <div className="menu-buttons-container">
+               {isMenuOpen===false && <div> <IoIosMenu onClick={handleMenuClick} style={{color: "white", fontSize: '2.3rem'}}/> </div>}
+               <Link><button style={{background: 'none', border: 'none', color: 'white',fontWeight: 600, fontSize: '.9rem'}}>Wallets</button></Link>         
+            </div>
 
             <div className="logo">
                 <p>DREI</p>
             </div>
 
-            <div style={{flex: 1, display: 'flex', justifyContent: 'flex-end', gap:'.2rem'}}>
-                <RiShoppingCartLine style={{color: 'white', fontSize: '1.3rem'}}/>
+            <div className="shopping-cart-wrapper">
+                <RiShoppingCartLine className="shopping-cart-icon"/>
                 <span style={{color:"white"}}><p>0</p></span>
             </div>
-            <div style={
-                {
-                    backgroundColor: 'rgba(235,235,235, .7)',
-                    position:'absolute',
-                    bottom:0,
-                    transform: 'translateY(100%)',
-                    padding: '.4rem', fontSize: '.8rem',
-                    width: '100vw',
-                    left: 0,
-                    justifyContent: 'center',
-                    display: 'flex',
-                    fontWeight: 500,
-                }}>
+            <div className="main-system-message-container">
                 <p>LIFETIME WARRANTY & 75 DAY RISK-FREE TRIAL</p>
             </div>
+            {isMenuOpen && <OpenMenu handleMenuClick={handleMenuClick}/>}
+        </div>
+    )
+}
+
+function OpenMenu(props){
+    return (
+        <div className="open-menu-container">
+            <IoMdClose className="close-menu-icon" onClick={props.handleMenuClick}/>
+            <h1 className="menu-title">Menu</h1>
+            <nav className="nav-wrapper">
+                <ul className="nav-item-list">
+                    <Link to={'/'}><li className="menu-item">Home</li></Link>
+                    <Link to={'/shop'}><li className="menu-item">Shop</li></Link>
+                    <Link><li className="menu-item">About us</li></Link>
+                    <Link><li className="menu-item">Support</li></Link>
+                    <Link><li className="menu-item">Blog</li></Link>
+                </ul>
+            </nav>
         </div>
     )
 }
