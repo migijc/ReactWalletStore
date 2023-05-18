@@ -5,8 +5,8 @@ import ThreeEnv from "./ThreeEnv";
 import { Link } from "react-router-dom";
 import tester from '../walletImages/testerrr1.png'
 import {CgArrowLongRight} from 'react-icons/cg'
-import {AiFillStar} from 'react-icons/ai'
 import { useNavigate } from "react-router-dom";
+import FiveStarsDisplay from "./FiveStarsDisplay";
 
 export default function Home() {
     const navigate = useNavigate();
@@ -24,7 +24,7 @@ export default function Home() {
                         <button style={{border: 'none', backgroundColor: 'transparent', fontWeight: '900',color:'white', fontSize: '1.6rem'}}>Shop Now</button>
                         <CgArrowLongRight style={{color: 'white',fontSize: '3rem'}}/>
                     </div>
-                    <StarsAnnouncment/>
+                    <FiveStarsDisplay starsContainerMessage="Over 200 Five Star Reviews!" class={'stars-container-home'} />
                 </div>
                 <div className="main-image-container">
                     <div className="overlay"/>
@@ -32,24 +32,5 @@ export default function Home() {
                 </div>             
             </div>
         </div>
-    )
-}
-
-function StarsAnnouncment(){
-
-    return (
-        <div style={{zIndex: 20 , position: 'fixed', bottom: '3rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '.4rem'}}>
-          <div>
-            <p style={{color: 'gray', fontWeight: 600,}}>More than 200 five star reviews</p>
-          </div>  
-          <div style={{display: 'flex', gap: '.7rem', fontSize: '1.6rem'}}>
-            <AiFillStar style={{color: "#ffc906"}}/>
-            <AiFillStar style={{color: "#ffc906"}}/>
-            <AiFillStar style={{color: "#ffc906"}}/>
-            <AiFillStar style={{color: "#ffc906"}}/>
-            <AiFillStar style={{color: "#ffc906"}}/>
-          </div>          
-        </div>
-
     )
 }

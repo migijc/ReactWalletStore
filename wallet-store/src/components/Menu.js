@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 
 export default function Menu() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [systeMessage, setSystemMessage] = useState("LIFETIME WARRANTY & 75 DAY RISK-FREE TRIAL");
 
     function handleMenuClick(){
         setIsMenuOpen(!isMenuOpen)
@@ -13,21 +14,28 @@ export default function Menu() {
 
     return (
         <div className="menu-container">
-            <div className="menu-buttons-container">
-               {isMenuOpen===false && <div> <IoIosMenu onClick={handleMenuClick} style={{color: "white", fontSize: '2.3rem'}}/> </div>}
-               <Link><button style={{background: 'none', border: 'none', color: 'white',fontWeight: 600, fontSize: '.9rem'}}>Wallets</button></Link>         
+            <div className="menu-content-wrapper">
+                <div className="menu-buttons-container">
+                {isMenuOpen===false && <div> <IoIosMenu onClick={handleMenuClick} style={{color: "white", fontSize: '2.3rem'}}/> </div>}
+                <Link><button style={{background: 'none', border: 'none', color: 'white',fontWeight: 600, fontSize: '.9rem'}}>Wallets</button></Link>         
+                </div>
+
+                <div className="logo-wrapper">
+                  <div className="logo">
+                    <p>DREI</p>
+                  </div>            
+                </div>
+
+
+                <div className="shopping-cart-wrapper">
+                    <RiShoppingCartLine className="shopping-cart-icon"/>
+                    <span style={{color:"white"}}><p>0</p></span>
+                </div>
             </div>
 
-            <div className="logo">
-                <p>DREI</p>
-            </div>
 
-            <div className="shopping-cart-wrapper">
-                <RiShoppingCartLine className="shopping-cart-icon"/>
-                <span style={{color:"white"}}><p>0</p></span>
-            </div>
             <div className="main-system-message-container">
-                <p>LIFETIME WARRANTY & 75 DAY RISK-FREE TRIAL</p>
+                <p>{systeMessage}</p>
             </div>
             {isMenuOpen && <OpenMenu handleMenuClick={handleMenuClick}/>}
         </div>
