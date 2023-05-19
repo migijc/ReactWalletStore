@@ -5,14 +5,14 @@ export default function FiveStarsDisplay(props){
     return (
         <div className={props.class}>
           <div>
-            <p style={{color: 'gray', fontWeight: 600,}}>{props.starsContainerMessage}</p>
+            <p style={{color: 'gray', fontWeight: 400,}}>{props.starsContainerMessage}</p>
           </div>  
-          <div style={{display: 'flex', gap: '.7rem', fontSize: '1.6rem'}}>
-            <AiFillStar style={{color: "#ffc906"}}/>
-            <AiFillStar style={{color: "#ffc906"}}/>
-            <AiFillStar style={{color: "#ffc906"}}/>
-            <AiFillStar style={{color: "#ffc906"}}/>
-            <AiFillStar style={{color: "#ffc906"}}/>
+          <div style={{display: 'flex', fontSize: props.fontSize}}>
+            <AiFillStar style={{color: props.color || "#ffc906"}}/>
+            <AiFillStar style={{color: props.color || "#ffc906"}}/>
+            <AiFillStar style={{color: props.color || "#ffc906"}}/>
+            <AiFillStar style={{color: props.color || "#ffc906"}}/>
+            <AiFillStar style={{color: props.color || "#ffc906"}}/>
           </div>          
         </div>
     )

@@ -4,8 +4,7 @@ import Menu from './Menu';
 import FiveStarsDisplay from "./FiveStarsDisplay";
 import {IoIosAdd} from 'react-icons/io'
 import {HiOutlineMinus} from 'react-icons/hi'
-
-
+import Reviews from './Reviews';
 
 export default function OpenedProduct(props) {
     const [isFeaturesExtended, setIsFeaturesExtended] = useState(false)
@@ -13,9 +12,8 @@ export default function OpenedProduct(props) {
     const location = useLocation();
     let state = location.state;
 
+    //change the shown icon for open and close side menu
     useEffect(() => {
-        console.log('noooon')
-        console.log(currentFeaturesIcon)
         if(isFeaturesExtended){
             setCurrentFeaturesIcon(<HiOutlineMinus style={{fontSize: '.73rem'}} />)
         } else {
@@ -42,11 +40,13 @@ export default function OpenedProduct(props) {
                     <FiveStarsDisplay
                          class='stars-container-opened-product'
                          starsContainerMessage='270 reviews'
+                         color='rgb(50,50,50)'
+                         fontSize='1.15rem'
                         />
 
                     <div className='product-basic-info'>
                         <h1 className='product-title'>{state.currentProduct.name}</h1>
-                        <p className='opened-product-price'>{'$' + state.currentProduct.price}</p>
+                        <p className='opened-product-price'>{'$' + (state.currentProduct.price).toFixed(2)}</p>
                         <h2 className='product-sub-title'>{state.currentProduct.productType}</h2>
                     </div>
 
@@ -63,8 +63,8 @@ export default function OpenedProduct(props) {
                     <button className='add-opened-product-button'>Add to cart</button>
 
                     <div className='extra-info-container'>
-                        <div>
-                            {state.walletInfo.description}
+                        <div style={{fontWeight: 400, fontSize: '1rem', color: 'rgb(50,50,50)', }}>
+                            <p>{state.walletInfo.description}</p>
                         </div>
                         <div className='features-container'>
                             <h3 className='extra-info-title'>Features</h3>
@@ -80,7 +80,7 @@ export default function OpenedProduct(props) {
 
                     </div>
                 </div>
-                <h1>Heyo</h1>
+                <Reviews />
             </div>
         </div>
     )

@@ -1,6 +1,4 @@
 import React, { useEffect } from "react";
-import { db } from "./Firebase";
-import { collection, setDoc, addDoc } from "firebase/firestore";
 import black from '../walletImages/black.png'
 import red from '../walletImages/red.png'
 import gray from '../walletImages/gray.png'
@@ -12,10 +10,7 @@ import { useNavigate } from "react-router-dom";
 
 
 export default function Shop(){
-    let itemsColRef = collection(db, 'items');
-    let allProductImages = [black, red, gray, green,]
     const navigate = useNavigate();
-    
     const handleClick = (id, product) => navigate(`${id}`, {state: {currentProduct: product, allProducts: aluminumWallets, walletInfo: aluminumWalletsInfo,}})
 
     return (
