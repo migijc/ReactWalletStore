@@ -2,15 +2,18 @@ import React, { useState } from "react";
 import {RiShoppingCartLine} from 'react-icons/ri'
 import {IoIosMenu, IoMdClose} from 'react-icons/io'
 import { Link } from "react-router-dom";
+import ShoppingCart from "./ShoppingCart";
 
 
-export default function Menu() {
+export default function Menu(props) {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [systeMessage, setSystemMessage] = useState("LIFETIME WARRANTY & 75 DAY RISK-FREE TRIAL");
 
     function handleMenuClick(){
         setIsMenuOpen(!isMenuOpen)
     }
+
+    const handleAddItem = props.addItemToBag;
 
     return (
         <div className="menu-container">
@@ -28,8 +31,7 @@ export default function Menu() {
 
 
                 <div className="shopping-cart-wrapper">
-                    <RiShoppingCartLine className="shopping-cart-icon"/>
-                    <span style={{color:"white"}}><p>0</p></span>
+                    {<ShoppingCart addItemToBag={handleAddItem} itemsInBag={props.itemsInCart} removeItemFromCart={props.removeItemFromCart}/>}
                 </div>
             </div>
 

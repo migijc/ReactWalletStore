@@ -1,0 +1,86 @@
+.reviewPageContainer{
+    grid-column-start: 1;
+    grid-column-end: -1;
+    /* min-height: 100vh; */
+    display: grid;
+    padding: 5rem;
+}
+
+.currentViewReviews{
+    display: flex;
+    gap: .6rem;
+    border-bottom: .23rem solid rgb(190, 190, 190);
+    width: fit-content;
+    align-items: center;
+    padding-bottom: .2rem;
+}
+
+.reviewsButtonText{
+    font-weight: 600;
+    color: rgb(70,70,70);
+    font-size: 1.1rem;
+}
+
+.totalReviewsText{
+    text-align: center;
+    background-color: rgb(70, 70, 70);
+    padding: .15rem .5rem;
+    font-size: .8rem;
+    color: white;
+    font-weight: 700;
+    border-radius: .2rem;
+}
+
+.averageReviewContainer{
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 4rem 0 1rem;
+    border-bottom: .1rem solid rgb(190, 190, 190);
+    justify-content: center;
+}
+
+.totalAverageText{
+    font-size: 2.3rem;
+    font-weight: 600;
+    color: rgb(70, 70, 70);
+}
+
+.averageStarsDisplay{
+   display: flex;
+   flex-direction: row-reverse;
+   align-items: center;
+   gap: .5rem;
+   font-size: .90rem;
+}
+
+.reviewImagesContainer{
+    display: flex;
+    gap: .18rem;
+}
+
+.reviewContentContainer{
+    display: flex;
+    align-self: flex-start;
+    flex-direction: column;
+    padding: 1rem;
+    gap: 1rem;
+}
+
+.reviewContentText{
+    margin-top: -.5rem;
+    margin-bottom: .5rem;
+    color: rgb(70,70,70);
+    font-weight: 400;
+}
+
+.reviewDateContainer{
+    display: flex;
+    justify-content: flex-end;
+    padding: 2rem;
+}
+
+.reviewDateContainer > p {
+    font-size: .9rem;
+    font-weight: 300;
+}

@@ -25,9 +25,11 @@ export default function OpenedProduct(props) {
         setIsFeaturesExtended(!isFeaturesExtended);
     }
 
+    const addItemToCart = props.addItemToBag;
+
     return (
         <div className='opened-product-page'>
-            <Menu />
+            {props.Menu}
 
             <div className='opened-product-main-content'>
                 <div className='main-content-left'>
@@ -42,7 +44,7 @@ export default function OpenedProduct(props) {
                          starsContainerMessage='270 reviews'
                          color='rgb(50,50,50)'
                          fontSize='1.15rem'
-                        />
+                    />
 
                     <div className='product-basic-info'>
                         <h1 className='product-title'>{state.currentProduct.name}</h1>
@@ -60,11 +62,11 @@ export default function OpenedProduct(props) {
                         })}
                     </div>
 
-                    <button className='add-opened-product-button'>Add to cart</button>
+                    <button onClick={()=> addItemToCart(state.currentProduct)} className='add-opened-product-button'>Add to cart</button>
 
                     <div className='extra-info-container'>
                         <div style={{fontWeight: 400, fontSize: '1rem', color: 'rgb(50,50,50)', }}>
-                            <p>{state.walletInfo.description}</p>
+                            <p style={{lineHeight: '1.31rem', fontSize: '.9rem'}}>{state.walletInfo.description}</p>
                         </div>
                         <div className='features-container'>
                             <h3 className='extra-info-title'>Features</h3>

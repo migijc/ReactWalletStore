@@ -1,13 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { db } from "./firebaseConfig";
 import { collection, getDoc, doc } from "firebase/firestore";
 import FiveStarsDisplay from "./FiveStarsDisplay";
 import {MdVerifiedUser} from 'react-icons/md'
+import styles from '../styles.module.css'
 
 export default function Reviews() {
     const [retrievedReviews, setRetrievedReviews] = useState(null);
     const [listOfPages, setListOfPages] = useState(null)
     const [indexOfCurrentPage, setIndexOfCurrentPage] = useState(0);
+    const currentPageRef = useRef(null)
 
 
     async function getAllReviews(){
@@ -24,53 +26,81 @@ export default function Reviews() {
 
     useEffect(() => {
         if (retrievedReviews) {
-            const pages = paginateReviews(8, retrievedReviews);
+            const pages = paginateReviews(10, retrievedReviews);
             setListOfPages(pages)
         }
     }, [retrievedReviews])
+
+    function handlePageSelectionClick(e, index){
+        console.log(e)
+        currentPageRef.current.style.border = 'none'
+        setIndexOfCurrentPage(index)
+    }
+
+    useEffect(() => {
+        if(currentPageRef.current){
+            let current = currentPageRef.current;
+            current.style.borderBottom = '2px solid rgb(30,30,30)'
+            current.style.borderTop = '2px solid rgb(30,30,30)'
+        }
+    })
     
     if(listOfPages){
       return (
-        <div style={{gridColumnStart: 1, gridColumnEnd: -1, minHeight: '100vh', padding: '5rem'}}>
-            <div style={{display: 'flex', gap: '.6rem', borderBottom: '.23rem solid rgb(190, 190, 190)', width: 'fit-content', alignItems: 'center', paddingBottom: '.2rem'}}>
-                <p style={{fontWeight: 600, color: 'rgb(70,70,70)', fontSize: '1.1rem'}}>REVIEWS</p>
-                <p style={{textAlign: 'center',backgroundColor: 'rgb(70, 70, 70)', padding: '.15rem .5rem',fontSize:'.8rem' ,color: 'white', fontWeight: 700, borderRadius:'.2rem'}}>270</p>
+        <div className={styles.reviewPageContainer}>
+            <div className={styles.currentViewReviews}>
+                <p className={styles.reviewsButtonText}> REVIEWS </p>
+                <p className={styles.totalReviewsText}> 270 </p>
             </div>
 
-            <div style={{display: 'flex', alignItems: 'center', gap: '1rem', padding: '4rem 0 1rem', borderBottom: '.1rem solid rgb(30, 30, 30)', justifyContent: 'center'}}>
-                <p style={{fontSize: '2.3rem', fontWeight: 600, color: 'rgb(70, 70, 70)',}}>4.7</p>
-                <FiveStarsDisplay fontSize='1.6rem' color={'rgb(70,70,70)'} />
-                <p style={{fontSize:'.8rem'}}>More than 2000 orders</p>
+            <div className={styles.averageReviewContainer}>
+                <p className={styles.totalAverageText}> 4.7 </p>
+
+                <FiveStarsDisplay
+                   class={styles.averageStarsDisplay}
+                   fontSize='1.6rem'
+                   color={'rgb(70,70,70)'}
+                   starsContainerMessage="More than 2000 orders"
+                />
             </div>
 
-            <div className='reviews-wrapper'>
+            <div className='reviews-wrapper' style={{gridTemplateRows: `repeat(${10}, 1fr)`}}>
                 {listOfPages[indexOfCurrentPage].map((rev, index) => {
                     const nameVariants = getNameVariants(rev.displayName)
                     return (
                         <div key={index} className="review-container">
                             <AuthorInfo nameVariants={nameVariants} rev={rev} />
 
-                            <div style={{display: 'flex',alignSelf:'flex-start', flexDirection: 'column', padding: '1.5rem',  gap: '.4rem' }}>
+                            <div className={styles.reviewContentContainer}>
                                 <FiveStarsDisplay fontSize='1.6rem' color={'rgb(70,70,70)'} />
 
-                                <p>{rev.content}</p>
+                                <p className={styles.reviewContentText}>{rev.content}</p>
 
-                                <div style={{display: 'flex', gap: '.15rem',alignSelf: 'flex-start' ,gridTemplateColumns: `repeat(${rev.photos.length}, 1fr)`, position: 'absolute', bottom: '1.5rem'}}>
+                                <div className={styles.reviewImagesContainer}>
                                   {rev.photos.map(photo => {
                                     return (
-                                        <img style={{width: '4rem', height: '4rem'}} src={photo}/>
+                                        <img style={{width: '4rem', height: 'auto'}} src={photo}/>
                                     )
                                     })}                                  
                                 </div>
                             </div>
 
-                            <div style={{display: 'flex', justifyContent: 'flex-end', padding: '2rem'}}>
+                            <div className={styles.reviewDateContainer}>
                                 <p>{getDateFromStamp(rev.date.seconds)}</p>
                             </div>
                         </div> 
                     )
                 })}
+                <div className="page-select-container">
+                {listOfPages.map((page, index) => {
+                    
+                    return (
+                        <button ref={index === indexOfCurrentPage ? currentPageRef : null} key={index} onClick={(e)=>handlePageSelectionClick(e ,index)} className="page-select-button">{index + 1}</button>
+                    )
+                })}
             </div>
+            </div>
+
         </div>
       )   
     }
@@ -85,7 +115,7 @@ function AuthorInfo(props) {
                 </div>
                 <p>{props.nameVariants.shortenedName}</p>
             </div>
-            <div style={{color: '#0079cf', fontWeight: 400, fontSize: '.85rem'}} className="author-info-bottom">
+            <div style={{color: '#39d38c', fontWeight: 400, fontSize: '.88rem', textShadow: '0 0 .7px 3px black'}} className="author-info-bottom">
                 <MdVerifiedUser />
                 <p>Verified Buyer</p>
             </div>

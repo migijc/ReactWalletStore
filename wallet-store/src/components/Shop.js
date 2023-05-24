@@ -9,23 +9,21 @@ import { useNavigate } from "react-router-dom";
 
 
 
-export default function Shop(){
+export default function Shop(props){
     const navigate = useNavigate();
     const handleClick = (id, product) => navigate(`${id}`, {state: {currentProduct: product, allProducts: aluminumWallets, walletInfo: aluminumWalletsInfo,}})
 
     return (
         <div className="shop-page-wrapper">
-            <div>
-                <Menu/>
-            </div>
+                {props.Menu}
             <div className="shop-main-content">
-                <div className="shop-side-bar" style={{padding: '10rem 2rem',}}>
+                <div className="shop-side-bar" style={{padding: '10rem 2rem'}}>
                     <h2 style={{fontSize:'1.1rem', color: 'rgb(30,30,30)'}}>Wallets</h2>
                     <div style={{fontSize:'.9rem'}}>
                         <p style={{color:'rgb(80,80,80)'}}>Aluminum</p>
                     </div>
                 </div>
-                <div className="basic-colors-display">
+                <div className="displayed-products-container">
                     {
                         aluminumWallets.map((product) => {
                             return (
