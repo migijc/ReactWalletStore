@@ -25,8 +25,8 @@ export default function Home(props) {
             <div className="content-container">
                 <div className="content-container-left">
                         <div className="shop-now-button-wrapper" style={{display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center',}}>
-                        <button onClick={handleClick} style={{border: 'none', backgroundColor: 'transparent', fontWeight: '900',color:'white', fontSize: '1.6rem'}}>Shop Now</button>
-                        <CgArrowLongRight style={{color: 'white',fontSize: '3rem'}}/>
+                        <button onClick={handleClick} style={{border: '.05rem solid white',padding: '.85rem 2.5rem' , backgroundColor: 'transparent', fontWeight: '700',color:'white', fontSize: '1.6rem'}}>Shop Now</button>
+                        {/* <CgArrowLongRight style={{color: 'white',fontSize: '3rem'}}/> */}
                     </div>
                     <FiveStarsDisplay fontSize={'1.6rem'} starsContainerMessage="Over 200 Five Star Reviews!" class={'stars-container-home'} />
                 </div>

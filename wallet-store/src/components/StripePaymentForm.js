@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { loadStripe } from '@stripe/stripe-js';
-import { Elements, PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js';
+import { AddressElement, Elements, PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js';
 
 
 const testKey = "pk_test_51NBAumEDoiHdZBdPSZDZyRWpHfgZoobdqDma0u9VDPtqFqqgoZ0hB6H51nqjxz4No7PpA7yKugNShyRpSlQz7RDN00rD25fBZo";
@@ -11,28 +11,75 @@ const stripePromise = loadStripe(testKey);
 
 export default function StripePaymentForm(props) {
     
-
     const options = {
         clientSecret: props.clientSecret,
+        appearance: {
+            theme: 'none',
+            rules: {
+                '.Input': {
+                    color:'rgb(45,45,45)',
+                    fontSize: '.85rem',
+                    appearance: 'none',
+                    borderBottom: '.2rem solid rgb(246, 246, 246)',
+                    outline: '0px solid white !important'
+                },
+                '.Input:focus': {appearance: 'none', outline: 'none', border: 'none', borderBottom: '.2rem solid #1d1d1d',},
+                '.Select': {
+                    color: 'green'
+                },
+                '.Label': {
+                    display: 'none',
+                    fontSize: '.75rem',
+                }
+            }
+        },
     }
-
 
     return (
         <Elements stripe={stripePromise} options={options}>
-            <PaymentForm setStripeRef={props.setStripeRef} setElementsRef={props.setElementsRef}/>
+            {props.paymentForm && <PaymentForm isPaymentValid={props.setIsPaymentValid} />}
+            {props.shippingForm && <AddressForm
+                setElementsRef={props.setElementsRef}
+                setShipping={props.setShipping}
+                setIsShippingValid={props.setIsShippingValid}
+                setStripeRef={props.setStripeRef}
+                />}
         </Elements>
     )
 }
 
-function PaymentForm(props) {
-    const elements = useElements()
-    const stripe = useStripe()
 
+
+function PaymentForm(props) {
+
+
+    return <PaymentElement onChange={(e)=> props.isPaymentValid(e.complete)}/>
+}
+
+
+function AddressForm(props){
+    const elements = useElements();
+    const stripe = useStripe();
+    
     useEffect(() =>{
-        if(elements && stripe){
+        if(elements && stripePromise){
             props.setElementsRef(elements)
-            props.setStripeRef(stripe)
+            return props.setStripeRef(stripe)
         }
-    }, [elements])
-    return <PaymentElement />
+    })
+    
+    
+    function handleChange(e){
+        // if(props.mode === 'shipping'){
+            if(props.setShipping){
+                props.setShipping(e.value)
+            }
+            props.setIsShippingValid(e.complete)
+        // } else {
+        //     return 
+        // }
+
+    }
+
+    return <AddressElement  onChange={(e)=> handleChange(e)} options={{mode: 'shipping'}}/>
 }

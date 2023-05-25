@@ -207,7 +207,7 @@ canvas{
   border-top-right-radius: .7rem;
   border-bottom-right-radius: .7rem;
   border: none;
-  font-weight: 600;
+  /* font-weight: 600; */
 }
 
 
@@ -362,21 +362,31 @@ li{
 }
 
 .menu-title{
-  color: white;
+  color:  rgb(210, 210, 210);
   font-size: 3rem;
+  font-weight: 500;
 }
 
 .nav-item-list{
   display: flex;
   flex-direction: column;
-  gap: .6rem; 
-  color: white;
+  text-align: center;
 }
 
 .menu-item{
-  padding-bottom:.4rem;
+  /* padding-bottom:.8rem; */
+  padding: 1rem;
   width: 100%;
-  border-bottom: .15rem solid rgb(56, 56, 56);
+  border-bottom: .12rem solid rgb(166, 166, 166);
+  color:  rgb(215, 215, 215);
+  font-size: .9rem;
+  text-decoration: none;
+}
+
+.menu-item:hover{
+  background-color: rgb(240,240,240);
+  color: rgb(45,45,45);
+
 }
 
 .nav-wrapper{
@@ -803,7 +813,7 @@ p::first-letter{
   max-height: 100%;
   /* overflow: scroll; */
   display: grid;
-  gap: .3rem;
+  gap: 1rem;
   /* align-items: flex-start; */
 }
 
@@ -885,24 +895,26 @@ p::first-letter{
 
 .checkout-input{
   width: 100%;
-  padding: 1rem;
+  padding: .8rem;
 }
 
 input{
   appearance: none;
   border: none;
-  border-bottom: .12rem solid rgb(175, 175, 175);
+  border-bottom: .2rem solid rgb(255, 255, 255);
   outline: none;
   border-radius: .2rem;
-  background-color: rgb(245, 245, 245);
+  background-color: rgb(255, 255, 255);
+  border-radius: .25rem;
 }
+
 
 input:focus{
   border-bottom: .2rem solid #1d1d1d;
 }
 
 .form-shipping-info-title{
-  padding-left: 0.5rem;
+  padding: 0 0.5rem .5rem;
 }
 
 .progress-container > div{
@@ -918,4 +930,8 @@ input:focus{
   position: absolute;
   bottom: -1.5rem;
   font-size: .85rem;
+}
+
+.disabled{
+  background-color: gray !important;
 }
