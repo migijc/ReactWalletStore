@@ -19,7 +19,7 @@ export default function Router(props){
                 <Route path="/" element={<Home Menu={menu} />}/>
                 <Route path="/shop" element={<Shop Menu={menu} />} />
                 <Route path="/shop/:productID" element={<OpenedProduct Menu={menu} addItemToBag={props.addItemsToCart}/>} />
-                <Route path='/checkout' element={<Checkout />} />
+                <Route path='/checkout/:checkoutID' element={<Checkout />} />
             </Routes>
             </BrowserRouter>
         </div>

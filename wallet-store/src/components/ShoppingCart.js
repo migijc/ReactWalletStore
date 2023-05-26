@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import {RiShoppingCartLine} from 'react-icons/ri';
 import {IoMdClose} from 'react-icons/io'
 import { useNavigate, useParams } from 'react-router-dom';
+import { createNewCheckoutSessionID } from './firebaseConfig';
 
 
 
@@ -13,13 +14,20 @@ export default function ShoppingCart(props){
     const [totalCartPrice, setTotalCartPrice] = useState(0);
     const params = useParams();
     const navigate = useNavigate();
-    
-
-    let testAdd = props.addItemToBag;
-    let itemsInBag = props.itemsInBag;
+    const testAdd = props.addItemToBag;
+    const itemsInBag = props.itemsInBag;
 
     function removeItemFromCart(item) {
         props.removeItemFromCart(item)
+    }
+
+    function handleCheckoutClick(){
+        const session = createNewCheckoutSessionID();
+        const sessionID = session.id;
+        navigate(
+            `/checkout/${sessionID}`,
+            {state: {itemsInCart: cartList, cartSubtotal: totalCartPrice}}
+            )
     }
 
     useEffect(()=>{
@@ -79,7 +87,7 @@ export default function ShoppingCart(props){
                                 </span>
                                 <p className='cart-total-price'>{"$" + totalCartPrice.toFixed(2)}</p>
                         </div>
-                        <button onClick={()=>navigate('/checkout/', {state: {itemsInCart: cartList, cartSubtotal: totalCartPrice}})} className='checkout-button'>Checkout</button>
+                        <button onClick={handleCheckoutClick} className='checkout-button'>Checkout</button>
                     </div>
                 </div>
             </div>

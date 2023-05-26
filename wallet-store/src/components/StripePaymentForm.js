@@ -6,7 +6,6 @@ import { AddressElement, Elements, PaymentElement, useElements, useStripe } from
 const testKey = "pk_test_51NBAumEDoiHdZBdPSZDZyRWpHfgZoobdqDma0u9VDPtqFqqgoZ0hB6H51nqjxz4No7PpA7yKugNShyRpSlQz7RDN00rD25fBZo";
 const secretKey = "sk_test_51NBAumEDoiHdZBdPflzwCuJg6AWHzbZaBPOQBL6JWSQUmGGwtHcGkCRX6M4gL6gh4uGcp8IilFWSopB21PmPZYjT00JokvXULF";
 const stripePromise = loadStripe(testKey);
-// const stripe = require('stripe')(testKey)
 
 
 export default function StripePaymentForm(props) {
@@ -64,7 +63,9 @@ function AddressForm(props){
     useEffect(() =>{
         if(elements && stripePromise){
             props.setElementsRef(elements)
-            return props.setStripeRef(stripe)
+            stripePromise.then(res => {
+                return props.setStripeRef(res);
+            })
         }
     })
     
@@ -81,5 +82,5 @@ function AddressForm(props){
 
     }
 
-    return <AddressElement  onChange={(e)=> handleChange(e)} options={{mode: 'shipping'}}/>
+    return <AddressElement  onChange={(e)=> handleChange(e)} options={{mode: 'billing'}}/>
 }

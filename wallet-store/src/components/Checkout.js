@@ -1,9 +1,10 @@
 import { useElements, useStripe } from '@stripe/react-stripe-js';
 import React, { useEffect, useRef, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate,useParams } from 'react-router-dom';
+import { addCheckoutSessionToDB, updateCheckoutSession } from './firebaseConfig';
 import StripePaymentForm from './StripePaymentForm';
 const secretKey = "sk_test_51NBAumEDoiHdZBdPflzwCuJg6AWHzbZaBPOQBL6JWSQUmGGwtHcGkCRX6M4gL6gh4uGcp8IilFWSopB21PmPZYjT00JokvXULF";
-const stripe = require('stripe')(secretKey)
+const stripe = require('stripe')(secretKey);
 
 
 
@@ -14,22 +15,22 @@ export default function Checkout(props) {
     const [isShippingValid, setIsShippingValid] = useState(null);
     const [isPaymentValid, setIsPaymentValid] = useState(null);
     const [stripeRef, setStripeRef] = useState(null);
+    const params = useParams()
+    const checkoutID = params.checkoutID;
+    const [salesTax, setSalesTex] = useState(null);
     let location = useLocation();
     let state = location.state;
     const itemsList = state.itemsInCart;
-    const subtotal = state.cartSubtotal
+    const subtotal = state.cartSubtotal;
+    const [total, setTotal] = useState(subtotal * 100);
     const stages = {
         1: 'information',
         2: 'shipping',
         3: 'payment',
     };
 
-
-
-
     async function handleNextClick(email, shipping) {
         if (checkoutStage === 1) {
-            console.log(stripe)
             let paymentRef = await stripe.paymentIntents.create({ amount: subtotal * 100, currency: 'usd', receipt_email: email, shipping, })
             setPaymentIntent(paymentRef)
             setCheckoutStage(checkoutStage + 1)
@@ -48,6 +49,7 @@ export default function Checkout(props) {
     }
 
     async function confirmPayment() {
+        console.log(stripe)
         let result = await stripeRef.confirmPayment({
             elements: elementsRef,
             clientSecret: paymentIntent.client_secret,
@@ -56,9 +58,37 @@ export default function Checkout(props) {
             },
             redirect: 'if_required'
         })
+        updateCheckoutSession(checkoutID, {result})
         console.log(result)
     }
 
+    useEffect(()=> {
+        if((salesTax === null) && paymentIntent){
+            stripe.tax.calculations.create({
+                currency: paymentIntent.currency,
+                line_items: [
+                    {
+                        amount: paymentIntent.amount,
+                        reference: 'Before Tax'
+                    }
+                ],
+                customer_details: {
+                    address: paymentIntent.shipping.address,
+                    address_source: 'shipping',
+                },
+                expand: ['line_items.data.tax_breakdown']
+            }).then(res => setSalesTex((res.tax_amount_exclusive)))
+        } 
+    }, [paymentIntent, salesTax])
+    
+    useEffect(()=>{
+        if(salesTax){
+            stripe.paymentIntents.update(
+                paymentIntent.id,
+                {amount: salesTax + paymentIntent.amount}
+                ).then(res => console.log(res))
+        }
+    }, [salesTax])
     return (
         <div style={styles.mainContainer}>
 
@@ -75,12 +105,14 @@ export default function Checkout(props) {
                         <MainInfoForm 
                             setElementsRef={setElementsRef}
                             setStripeRef={setStripeRef}
+                            itemsList={itemsList}
                             shippingInfo={paymentIntent}
                             setIsPaymentValid={setIsPaymentValid}
                             isPaymentValid={isPaymentValid}
                             handleNextClick={handleNextClick}
                             setIsShippingValid={setIsShippingValid}
                             isShippingValid={isShippingValid}
+                            checkoutID={checkoutID}
                              />}
 
                     {checkoutStage === 2 && 
@@ -99,7 +131,9 @@ export default function Checkout(props) {
                             setIsShippingValid={setIsShippingValid}
                             isShippingValid={isShippingValid}
                             handleNextClick={handleNextClick}
-                            clientSecret={paymentIntent.client_secret}/>}
+                            clientSecret={paymentIntent.client_secret}
+                            checkoutID={checkoutID}
+                            />}
                 </div>
 
                 <div style={styles.mainContentRight}>
@@ -130,17 +164,22 @@ export default function Checkout(props) {
                         </div>
 
                         <div style={styles.cartPricing}>
-                            <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between', fontWeight: 300, fontSize: '.90rem' }}>
-                                <p>SUBTOTAL</p>
-                                <p className='in-cart-price'>{'$' + subtotal.toFixed(2)}</p>
-                            </div>
+
                             <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between', fontWeight: 300, fontSize: '.90rem' }}>
                                 <p>SHIPPING</p>
-                                <p style={{ fontSize: '.7rem', fontWeight: '500', color: 'rgb(145,145,145)' }}>Calculated in next step</p>
+                                <p style={{ fontSize: '.85rem', fontWeight: '500', color: 'rgb(145,145,145)' }}>FREE</p>
+                            </div>
+                            <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between', fontWeight: 300, fontSize: '.90rem' }}>
+                                <p >TAX</p>
+                                <p style={{ fontSize: '.85rem', fontWeight: '500', color: 'rgb(145,145,145)' }}className='in-cart-price'>{'$' + (salesTax /100).toFixed(2)|| 'N/a'}</p>
+                            </div>
+                            <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between', fontWeight: 300, fontSize: '.90rem' }}>
+                                <p>SUBTOTAL</p>
+                                <p style={{fontWeight: 500, color: 'rgb(145,145,145)'}} className='in-cart-price'>{"$" + subtotal.toFixed(2)}</p>
                             </div>
                             <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between', padding: '1.5rem 2rem 0' }}>
                                 <p style={{ fontWeight: 400 }}>TOTAL</p>
-                                <p style={{ fontWeight: 600, fontSize: '1rem' }}>{"$" + subtotal.toFixed(2)}</p>
+                                <p style={{ fontWeight: 600, fontSize: '1rem' }}>{('$' + (subtotal + (salesTax || 0) /100).toFixed(2))}</p>
                             </div>
                         </div>
 
@@ -198,7 +237,10 @@ function MainInfoForm(props) {
     const [shipping, setShipping] = useState(null);
 
     function handleNextClick(userEmail, shipping) {
+        const itemsList = props.itemsList
         props.handleNextClick(userEmail, shipping)
+        addCheckoutSessionToDB(props.checkoutID, {email: userEmail, shipping: shipping.address, cart: itemsList })
+        // props.handleNextClick(userEmail)
     }
 
     return (
