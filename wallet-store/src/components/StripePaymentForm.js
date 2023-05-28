@@ -5,7 +5,7 @@ import { AddressElement, Elements, PaymentElement, useElements, useStripe } from
 
 const testKey = "pk_test_51NBAumEDoiHdZBdPSZDZyRWpHfgZoobdqDma0u9VDPtqFqqgoZ0hB6H51nqjxz4No7PpA7yKugNShyRpSlQz7RDN00rD25fBZo";
 const secretKey = "sk_test_51NBAumEDoiHdZBdPflzwCuJg6AWHzbZaBPOQBL6JWSQUmGGwtHcGkCRX6M4gL6gh4uGcp8IilFWSopB21PmPZYjT00JokvXULF";
-const stripePromise = loadStripe(testKey);
+export const stripePromise = loadStripe(testKey);
 
 
 export default function StripePaymentForm(props) {

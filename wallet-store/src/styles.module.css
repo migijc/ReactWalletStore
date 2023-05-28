@@ -4,6 +4,7 @@
     /* min-height: 100vh; */
     display: grid;
     padding: 5rem;
+    padding: 1rem;
 }
 
 .currentViewReviews{
@@ -63,7 +64,7 @@
     display: flex;
     align-self: flex-start;
     flex-direction: column;
-    padding: 1rem;
+    /* padding: 1rem; */
     gap: 1rem;
 }
 
@@ -75,9 +76,9 @@
 }
 
 .reviewDateContainer{
-    display: flex;
-    justify-content: flex-end;
-    padding: 2rem;
+    /* display: flex;
+    justify-content: flex-end; */
+    /* padding: 2rem; */
 }
 
 .reviewDateContainer > p {

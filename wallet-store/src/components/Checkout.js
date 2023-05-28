@@ -23,11 +23,16 @@ export default function Checkout(props) {
     const itemsList = state.itemsInCart;
     const subtotal = state.cartSubtotal;
     const [total, setTotal] = useState(subtotal * 100);
+    const [paymentError, setPaymentError] = useState(null)
     const stages = {
         1: 'information',
         2: 'shipping',
         3: 'payment',
     };
+
+    useEffect(() =>{
+        console.log(paymentError)
+    })
 
     async function handleNextClick(email, shipping) {
         if (checkoutStage === 1) {
@@ -49,17 +54,21 @@ export default function Checkout(props) {
     }
 
     async function confirmPayment() {
-        console.log(stripe)
-        let result = await stripeRef.confirmPayment({
-            elements: elementsRef,
-            clientSecret: paymentIntent.client_secret,
-            confirmParams: {
-                return_url: 'https://dreiwallets.com',
-            },
-            redirect: 'if_required'
-        })
-        updateCheckoutSession(checkoutID, {result})
-        console.log(result)
+             let result = await stripeRef.confirmPayment({
+                elements: elementsRef,
+                clientSecret: paymentIntent.client_secret,
+                confirmParams: {
+                    return_url: 'https://dreiwallets.com',
+                },
+                // redirect: 'if_required'
+            })
+            if(result.error){
+                setPaymentError(result.error.message)
+            }else{
+                console.log(result)
+                updateCheckoutSession(checkoutID, {result})
+                
+            }
     }
 
     useEffect(()=> {
@@ -92,14 +101,14 @@ export default function Checkout(props) {
     return (
         <div style={styles.mainContainer}>
 
-            <div style={styles.headerContainer}>
+            <div className='checkout-header-container' style={styles.headerContainer}>
                 <Logo />
-                <div style={styles.progressContainer}>
+                <div className='checkout-progress-container' style={styles.progressContainer}>
                     <ProgressContainer stage={stages[checkoutStage]} />
                 </div>
             </div>
 
-            <div style={styles.mainContent}>
+            <div className='checkout-main-content' style={styles.mainContent}>
                 <div style={styles.mainContentLeft}>
                     {checkoutStage === 1 && 
                         <MainInfoForm 
@@ -133,6 +142,7 @@ export default function Checkout(props) {
                             handleNextClick={handleNextClick}
                             clientSecret={paymentIntent.client_secret}
                             checkoutID={checkoutID}
+                            paymentError={paymentError}
                             />}
                 </div>
 
@@ -327,6 +337,7 @@ function Payment(props) {
             <form style={{ padding: '1.5rem 0' }}>
                 <div style={styles.formTitle}>
                     <h2 style={styles.inputSectionTitle}>PAYMENT</h2>
+                    {props.paymentError && <p style={{fontSize: '.8rem', color:'red'}}>*{props.paymentError}</p>}
                 </div>
                 <StripePaymentForm clientSecret={props.clientSecret} setStripeRef={props.setStripeRef} setElementsRef={props.setElementsRef} setIsShippingValid={props.setIsShippingValid} setShipping={setShipping} setIsPaymentValid={props.setIsPaymentValid} paymentIntent={props.paymentIntent} paymentForm={true} shippingForm={true}/>
             </form>
@@ -395,7 +406,7 @@ const styles = {
     mainContentLeft: {
         width: '100%',
         justifyItems: 'right',
-        minHeight: '100%',
+        // minHeight: '100%',
     },
 
     mainContentRight: {
@@ -524,6 +535,9 @@ const styles = {
     formTitle: {
         padding: '2rem',
         display: 'flex',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        flexDirection: 'column',
+        alignItems: 'center',
+        gap:'.5rem',
     },
 }

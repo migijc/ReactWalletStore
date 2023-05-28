@@ -1,17 +1,20 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Footer from "./Footer";
 import Menu from "./Menu";
 import ThreeEnv from "../threeComponents/ThreeEnv";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import tester from '../walletImages/testerrr1.png'
 import {CgArrowLongRight} from 'react-icons/cg'
 import { useNavigate } from "react-router-dom";
 import FiveStarsDisplay from "./FiveStarsDisplay";
 import { db } from "./firebaseConfig";
 import { collection, doc } from "firebase/firestore";
+import { stripePromise } from "./StripePaymentForm";
 
 export default function Home(props) {
     const navigate = useNavigate();
+    const location = useLocation()
+
     let mobileDisplayMessage = <div className="mobile-message-wrapper">
         <p className="mobile-home-text">GET SOMETHING SPECIAL THIS FATHER'S DAY</p>
         <p>A SIMPLE "THANK YOU"</p>
@@ -20,6 +23,18 @@ export default function Home(props) {
     function handleClick(){
         navigate('/shop')
     }
+
+
+
+    //get client_secret if redirected to paramURL
+    // useEffect(()=>{
+    //     let searchParams = new URLSearchParams(location.search);
+    //     let clientSecret = searchParams.get('payment_intent_client_secret');
+    //     if(clientSecret) {
+    //         navigate(`order_confirmation/${searchParams.search}`, {state: {clientSecret}})
+    //     }
+    // }, [])
+
 
     
     return (

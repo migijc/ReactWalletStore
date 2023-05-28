@@ -86,7 +86,7 @@ export default function Reviews() {
                             </div>
 
                             <div className={styles.reviewDateContainer}>
-                                <p>{getDateFromStamp(rev.date.seconds)}</p>
+                                <p style={{paddingTop:'1rem'}}>{getDateFromStamp(rev.date.seconds)}</p>
                             </div>
                         </div> 
                     )
@@ -117,7 +117,7 @@ function AuthorInfo(props) {
             </div>
             <div style={{color: '#39d38c', fontWeight: 400, fontSize: '.88rem', textShadow: '0 0 .7px 3px black'}} className="author-info-bottom">
                 <MdVerifiedUser />
-                <p>Verified Buyer</p>
+                <p style={{whiteSpace:'nowrap', textOverflow: 'none', fontSize: '.9em'}}>Verified Buyer</p>
             </div>
         </div>
     )
