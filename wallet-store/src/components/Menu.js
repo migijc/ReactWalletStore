@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import {RiShoppingCartLine} from 'react-icons/ri'
 import {IoIosMenu, IoMdClose} from 'react-icons/io'
 import { Link } from "react-router-dom";
 import ShoppingCart from "./ShoppingCart";
@@ -53,7 +52,7 @@ function OpenMenu(props){
                 <ul className="nav-item-list">
                     <Link to={'/'}><li className="menu-item">Home</li></Link>
                     <Link to={'/shop'}><li className="menu-item">Shop</li></Link>
-                    <Link><li className="menu-item">About us</li></Link>
+                    <Link to={'/about'}><li className="menu-item">About us</li></Link>
                     <Link><li className="menu-item">Support</li></Link>
                     <Link><li className="menu-item">Blog</li></Link>
                 </ul>

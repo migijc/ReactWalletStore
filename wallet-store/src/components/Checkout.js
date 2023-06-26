@@ -3,147 +3,29 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate,useParams } from 'react-router-dom';
 import { addCheckoutSessionToDB, updateCheckoutSession } from './firebaseConfig';
 import StripePaymentForm from './StripePaymentForm';
-const secretKey = "sk_test_51NBAumEDoiHdZBdPflzwCuJg6AWHzbZaBPOQBL6JWSQUmGGwtHcGkCRX6M4gL6gh4uGcp8IilFWSopB21PmPZYjT00JokvXULF";
-const stripe = require('stripe')(secretKey);
-
 
 
 export default function Checkout(props) {
-    const [checkoutStage, setCheckoutStage] = useState(1);
-    const [paymentIntent, setPaymentIntent] = useState(null);
-    const [elementsRef, setElementsRef] = useState(null);
-    const [isShippingValid, setIsShippingValid] = useState(null);
-    const [isPaymentValid, setIsPaymentValid] = useState(null);
-    const [stripeRef, setStripeRef] = useState(null);
-    const params = useParams()
-    const checkoutID = params.checkoutID;
     const [salesTax, setSalesTex] = useState(null);
+    const [updatedAmounts, setUpdatedAmounts] = useState(null);
     let location = useLocation();
     let state = location.state;
     const itemsList = state.itemsInCart;
     const subtotal = state.cartSubtotal;
-    const [total, setTotal] = useState(subtotal * 100);
-    const [paymentError, setPaymentError] = useState(null)
-    const stages = {
-        1: 'information',
-        2: 'shipping',
-        3: 'payment',
-    };
 
-    useEffect(() =>{
-        console.log(paymentError)
-    })
-
-    async function handleNextClick(email, shipping) {
-        if (checkoutStage === 1) {
-            let paymentRef = await stripe.paymentIntents.create({ amount: subtotal * 100, currency: 'usd', receipt_email: email, shipping, })
-            setPaymentIntent(paymentRef)
-            setCheckoutStage(checkoutStage + 1)
-            return
-        }
-        else if (checkoutStage === 3) {
-
-            if (elementsRef) {
-                elementsRef.submit();
-                confirmPayment()
-                return
-            } else {return}
-        } else {
-            setCheckoutStage(checkoutStage + 1)
-        }
-    }
-
-    async function confirmPayment() {
-             let result = await stripeRef.confirmPayment({
-                elements: elementsRef,
-                clientSecret: paymentIntent.client_secret,
-                confirmParams: {
-                    return_url: 'https://dreiwallets.com',
-                },
-                // redirect: 'if_required'
-            })
-            if(result.error){
-                setPaymentError(result.error.message)
-            }else{
-                console.log(result)
-                updateCheckoutSession(checkoutID, {result})
-                
-            }
-    }
-
-    useEffect(()=> {
-        if((salesTax === null) && paymentIntent){
-            stripe.tax.calculations.create({
-                currency: paymentIntent.currency,
-                line_items: [
-                    {
-                        amount: paymentIntent.amount,
-                        reference: 'Before Tax'
-                    }
-                ],
-                customer_details: {
-                    address: paymentIntent.shipping.address,
-                    address_source: 'shipping',
-                },
-                expand: ['line_items.data.tax_breakdown']
-            }).then(res => setSalesTex((res.tax_amount_exclusive)))
-        } 
-    }, [paymentIntent, salesTax])
-    
-    useEffect(()=>{
-        if(salesTax){
-            stripe.paymentIntents.update(
-                paymentIntent.id,
-                {amount: salesTax + paymentIntent.amount}
-                ).then(res => console.log(res))
-        }
-    }, [salesTax])
     return (
         <div style={styles.mainContainer}>
 
             <div className='checkout-header-container' style={styles.headerContainer}>
                 <Logo />
                 <div className='checkout-progress-container' style={styles.progressContainer}>
-                    <ProgressContainer stage={stages[checkoutStage]} />
                 </div>
             </div>
 
             <div className='checkout-main-content' style={styles.mainContent}>
                 <div style={styles.mainContentLeft}>
-                    {checkoutStage === 1 && 
-                        <MainInfoForm 
-                            setElementsRef={setElementsRef}
-                            setStripeRef={setStripeRef}
-                            itemsList={itemsList}
-                            shippingInfo={paymentIntent}
-                            setIsPaymentValid={setIsPaymentValid}
-                            isPaymentValid={isPaymentValid}
-                            handleNextClick={handleNextClick}
-                            setIsShippingValid={setIsShippingValid}
-                            isShippingValid={isShippingValid}
-                            checkoutID={checkoutID}
-                             />}
-
-                    {checkoutStage === 2 && 
-                        <ConfirmShipping
-                            email={paymentIntent.receipt_email}
-                            currentShipping={paymentIntent.shipping}
-                            handleNextClick={handleNextClick}
-                             />}
-
-                    {checkoutStage === 3 && 
-                        <Payment paymentIntent={paymentIntent}
-                            setElementsRef={setElementsRef}
-                            setStripeRef={setStripeRef}
-                            setIsPaymentValid={setIsPaymentValid}
-                            isPaymentValid={isPaymentValid}
-                            setIsShippingValid={setIsShippingValid}
-                            isShippingValid={isShippingValid}
-                            handleNextClick={handleNextClick}
-                            clientSecret={paymentIntent.client_secret}
-                            checkoutID={checkoutID}
-                            paymentError={paymentError}
-                            />}
+                    <h1 style={styles.containerTitle}>STANDARD CHECKOUT</h1>
+                    <StripePaymentForm itemsInCart={itemsList} setUpdatedAmounts={setUpdatedAmounts}/>
                 </div>
 
                 <div style={styles.mainContentRight}>
@@ -181,7 +63,8 @@ export default function Checkout(props) {
                             </div>
                             <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between', fontWeight: 300, fontSize: '.90rem' }}>
                                 <p >TAX</p>
-                                <p style={{ fontSize: '.85rem', fontWeight: '500', color: 'rgb(145,145,145)' }}className='in-cart-price'>{'$' + (salesTax /100).toFixed(2)|| 'N/a'}</p>
+                                {updatedAmounts && <p className='checkout-amount-value'>${(updatedAmounts.taxAmount / 100).toFixed(2)}</p>}
+                               {!updatedAmounts && <p style={{ fontSize: '.85rem', fontWeight: '500', color: 'rgb(145,145,145)' }}className='in-cart-price'>{'$' + (0).toFixed(2)|| 'N/a'}</p>}
                             </div>
                             <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between', fontWeight: 300, fontSize: '.90rem' }}>
                                 <p>SUBTOTAL</p>
@@ -189,7 +72,8 @@ export default function Checkout(props) {
                             </div>
                             <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between', padding: '1.5rem 2rem 0' }}>
                                 <p style={{ fontWeight: 400 }}>TOTAL</p>
-                                <p style={{ fontWeight: 600, fontSize: '1rem' }}>{('$' + (subtotal + (salesTax || 0) /100).toFixed(2))}</p>
+                                {updatedAmounts && <p className='checkout-total-value'>${(updatedAmounts.totalWithTax / 100).toFixed(2)}</p>}
+                                {!updatedAmounts && <p style={{ fontWeight: 600, fontSize: '1rem' }}>{('$' + (subtotal).toFixed(2))}</p>}
                             </div>
                         </div>
 
@@ -211,141 +95,11 @@ function Logo() {
     )
 }
 
-function ProgressContainer(props) {
-    const currentStageDivRef = useRef(null)
-
-    function getRef(stageName) {
-        if (stageName === props.stage) {
-            return currentStageDivRef;
-        }
-        return;
-    }
-
-    useEffect(() => {
-        currentStageDivRef.current.style.backgroundColor = 'rgb(45,45,45)'
-    })
 
 
-    return (
-        <div className='progress-container' style={{ display: 'flex', width: '100%', justifyContent: 'space-between' }}>
-            <div ref={getRef('information')} className='information'>
-                <p>Information</p>
-            </div>
-            <div ref={getRef('shipping')} className='shipping'>
-                <p>Shipping</p>
-            </div>
-            <div ref={getRef('payment')} className='payment'>
-                <p>Payment</p>
-            </div>
-        </div>
-    )
-}
 
 
-function MainInfoForm(props) {
-    const [userEmail, setUserEmail] = useState('Email');
-    const [shipping, setShipping] = useState(null);
 
-    function handleNextClick(userEmail, shipping) {
-        const itemsList = props.itemsList
-        props.handleNextClick(userEmail, shipping)
-        addCheckoutSessionToDB(props.checkoutID, {email: userEmail, shipping: shipping.address, cart: itemsList })
-        // props.handleNextClick(userEmail)
-    }
-
-    return (
-        <div style={styles.mainInfoForm}>
-            <h1 style={styles.containerTitle}>STANDARD CHECKOUT</h1>
-
-            <div style={styles.contactInfoContainer}>
-                <h2 style={styles.inputSectionTitle}>CONTACT INFORMATION</h2>
-                <input type="email" className='checkout-input' onChange={(e) => { setUserEmail(e.target.value) }} placeholder={userEmail} value={userEmail !== 'Email' ? userEmail : ''} />
-            </div>
-
-            <div style={styles.shippingAddressContainer}>
-                <h2 className='form-shipping-info-title' style={styles.inputSectionTitle}>SHIPPING INFORMATION</h2>
-                <StripePaymentForm setElementsRef={props.setElementsRef} setStripeRef={props.setStripeRef} secret_client={shipping} setShipping={setShipping} setIsShippingValid={props.setIsShippingValid} shippingForm={true} />
-            </div>
-
-            <div style={styles.submitInfoBtnContainer}>
-                <button className={props.isShippingValid ? null : 'disabled'} disabled={props.isShippingValid ? false : true} onClick={() => handleNextClick(userEmail, shipping)} style={styles.submitInfoBtn}>Next</button>
-            </div>
-        </div>
-
-    )
-}
-
-function ConfirmShipping(props) {
-    let address = props.currentShipping.address
-    const AddressString = <p style={{ fontSize: '.85rem', fontWeight: 500 }}>{`${address.line1}, ${address.line2}, ${address.city} ${address.state}, ${address.postal_code}`}</p>
-
-    return (
-        <div style={{ height: 'fit-content', width: '100%', backgroundColor: 'rgb(242,242,242)',border: '0.11rem solid rgb(210, 210, 210)', padding: '2rem', display: 'grid', gap: '2rem' }}>
-            <div style={{ display: 'grid', gap: '.2rem', background: 'rgb(242,242,242)' }}>
-                <h2 style={styles.inputSectionTitle}>CONFIRM INFO</h2>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 4fr 1fr', background: 'white', padding: '.95rem 0', marginTop: '.6rem' }}>
-                    <p style={{ padding: '0 1rem', fontSize: '.9rem' }}>Contact</p>
-                    <p style={{ fontSize: '.85rem', fontWeight: 500 }}>{props.email}</p>
-                    <button style={{ backgroundColor: 'transparent', border: 'none', fontSize: '1rem', fontWeight: 700 }}>Edit</button>
-                </div>
-
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 4fr 1fr', background: 'white', padding: '.8rem 0' }}>
-                    <p style={{ padding: '0 1rem', fontSize: '.9rem' }}>Shipping to</p>
-                    {AddressString}
-                    <button style={{ backgroundColor: 'transparent', border: 'none', fontSize: '1rem', fontWeight: 700 }}>Edit</button>
-                </div>
-            </div>
-
-            <div style={{ display: 'grid', gap: '1rem' }}>
-                <h2 style={styles.inputSectionTitle}>SHIPPING METHOD</h2>
-                <div style={{ display: 'grid', gridTemplateColumns: '5fr 1fr', background: 'white', padding: '.8rem 0' }}>
-
-                    <p style={{ fontSize: '.95rem', paddingLeft: '.95rem', fontWeight: 600 }}>Standard (7-14 days)</p>
-                    <button style={{ backgroundColor: 'transparent', border: 'none', fontSize: '1rem', fontWeight: 600 }}>Free</button>
-                </div>
-            </div>
-
-            <button onClick={() => props.handleNextClick()} style={styles.submitInfoBtn}>Next</button>
-        </div>
-    )
-}
-
-function Payment(props) {
-    const [shipping, setShipping] = useState(null);
-    const address = props.paymentIntent.shipping.address;
-    const AddressString = <p style={{ fontSize: '.85rem', fontWeight: 500 }}>{`${address.line1}, ${address.line2}, ${address.city} ${address.state}, ${address.postal_code}`}</p>
-
-
-    return (
-        <div style={{ width: '100%', padding: '2rem', background: 'rgb(242,242,242)', height: 'fit-content', border: '0.11rem solid rgb(210, 210, 210)' }}>
-            <div style={styles.summary}>
-                <div style={{ display: 'grid', background: 'rgb(242,242,242)', gap: '.2rem' }}>
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 4fr 1fr', background: 'white', padding: '.8rem 0' }}>
-                        <p style={{ padding: '0 1rem', fontSize: '.9rem' }}>Contact</p>
-                        <p style={{ fontSize: '.85rem', fontWeight: 500 }}>{props.paymentIntent.receipt_email}</p>
-                        <button style={{ backgroundColor: 'transparent', border: 'none', fontSize: '1rem', fontWeight: 700 }}>Edit</button>
-                    </div>
-
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 4fr 1fr', background: 'white', padding: '.8rem 0' }}>
-                        <p style={{ padding: '0 1rem', fontSize: '.9rem' }}>Ship to</p>
-                        {/* <p style={{ fontSize: '.9rem', fontWeight: 500 }}>fix</p> */}
-                        {AddressString}
-                        <button style={{ backgroundColor: 'transparent', border: 'none', fontSize: '1rem', fontWeight: 700 }}>Edit</button>
-                    </div>
-                </div>
-            </div>
-            <form style={{ padding: '1.5rem 0' }}>
-                <div style={styles.formTitle}>
-                    <h2 style={styles.inputSectionTitle}>PAYMENT</h2>
-                    {props.paymentError && <p style={{fontSize: '.8rem', color:'red'}}>*{props.paymentError}</p>}
-                </div>
-                <StripePaymentForm clientSecret={props.clientSecret} setStripeRef={props.setStripeRef} setElementsRef={props.setElementsRef} setIsShippingValid={props.setIsShippingValid} setShipping={setShipping} setIsPaymentValid={props.setIsPaymentValid} paymentIntent={props.paymentIntent} paymentForm={true} shippingForm={true}/>
-            </form>
-
-            <button disabled={props.isPaymentValid ? false : true} className={props.isPaymentValid ? 'null' : 'disabled'} onClick={() => props.handleNextClick()} style={styles.submitInfoBtn}>Pay Now</button>
-        </div>
-    )
-}
 
 const styles = {
     mainContainer: {
@@ -354,7 +108,7 @@ const styles = {
         position: 'relative',
         display: 'grid',
         gridTemplateColumns: '1fr',
-        gridTemplateRows: '1fr 5fr',
+        // gridTemplateRows: '1fr 5fr',
         justifyContent: 'center',
         gap: '2rem',
     },
@@ -363,7 +117,6 @@ const styles = {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'end',
-        padding: '1rem 0',
     },
 
     progressContainer: {
@@ -378,17 +131,22 @@ const styles = {
         justifyContent: 'space-between',
         width: '60vw',
         justifySelf: 'center',
+        maxHeight:'24.5vh',
+        marginTop:'.5rem',
+        padding:'1rem',
+        gap:'1rem'
     },
 
     logo: {
         border: '.3rem solid rgb(45, 45, 45)',
         padding: '1rem',
+        // paddingBottom:'.5rem',
         aspectRatio: 1,
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: '900rem',
-        fontSize: '2.4rem',
+        fontSize: '1.8rem',
         fontWeight: 800,
     },
 

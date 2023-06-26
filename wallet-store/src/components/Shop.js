@@ -1,19 +1,42 @@
-import React, { useEffect } from "react";
-import black from '../walletImages/black.png'
-import red from '../walletImages/red.png'
-import gray from '../walletImages/gray.png'
-import green from '../walletImages/green.png'
-import Menu from "./Menu";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
-
-
+import { getWalletInformation, getWalletsFromSolidCol } from "./firebaseConfig";
 
 export default function Shop(props){
     const navigate = useNavigate();
-    const handleClick = (id, product) => navigate(`${id}`, {state: {currentProduct: product, allProducts: aluminumWallets, walletInfo: aluminumWalletsInfo,}})
+    const [aluminumWalletsInfo, setAluminumWalletsInfo] = useState(null)
+    const handleClick = (id, product) => navigate(`${id}`, {state: {currentProduct: product, allProducts: solids.concat(designs), walletInfo: aluminumWalletsInfo,}})
+    const [solids, setSolids] = useState(null);
+    const [designs, setDesigns] = useState(null);
 
-    return (
+    async function getWallets(collectionString, stateChanger){
+        let walletsSolid = []
+        let result = await getWalletsFromSolidCol(collectionString);
+        console.log(result)
+        result = result.withClip.values;
+        let walletsInfo = await getWalletInformation()
+        result.forEach(item=>{
+            let product = {
+                productID: item.id,
+                name: item.displayName,
+                mainImage: item.image,
+                price: +walletsInfo.price,
+                productType: walletsInfo.productType,
+            }
+            walletsSolid.push(product)
+        })
+        
+        stateChanger(walletsSolid)
+        setAluminumWalletsInfo(walletsInfo)
+    }
+
+    useEffect(()=>{
+        getWallets('solids', setSolids)
+        getWallets('designs', setDesigns)
+    }, [])
+
+    if(aluminumWalletsInfo && solids && designs){
+            return (
         <div className="shop-page-wrapper">
                 {props.Menu}
             <div className="shop-main-content">
@@ -25,7 +48,7 @@ export default function Shop(props){
                 </div>
                 <div className="displayed-products-container">
                     {
-                        aluminumWallets.map((product) => {
+                        (solids.concat(designs)).map((product) => {
                             return (
                                 <div onClick={()=> handleClick(product.productID, product)} className="product-container">
                                     <div className="product-image-container">
@@ -44,25 +67,5 @@ export default function Shop(props){
             </div>
         </div>
     )
+    }
 }
-
-const aluminumWallets = [
-    {name: 'Matte Black', mainImage: black, productID: 'dr00matblk', price: 30, productType: 'Drei Wallet', walletColorCode: '#303133'},
-    {name: 'Gray', mainImage: gray, productID: 'dr0000gray', price: 30, productType: 'Drei Wallet', walletColorCode: '#6a7678'},
-    {name: 'Matte Green', mainImage: green, productID: 'dr00matgrn', price: 30, productType: 'Drei Wallet', walletColorCode: '#494f42'},
-    {name: 'Red', mainImage: red, productID: 'dr00000red', price: 30, productType: 'Drei Wallet', walletColorCode: '#d32639'},
-]
-
-const aluminumWalletsInfo={
-    description: ("Introducing the Cool Drei Aluminum Wallets – a perfect fusion of style and durability. Expertly crafted with panel aviation aluminum, these wallets offer a sleek and modern solution for organizing your essentials. Designed with both fashion and functionality in mind, the wallets exude sophistication while providing maximum protection for your cards, cash, and documents. At an affordable price, experience the convenience and elegance of the Cool Drei Aluminum Wallets, fitting seamlessly into your pocket or bag, and elevating your everyday essentials."),
-    features:[
-        "Holds up to 12 cards and 15 bills",
-        "Blocks RFID to prevent wireless theft",
-        "75-day risk free trial",
-        "Crafted from exquisite, premium-grade aluminum",
-        "3.4 Stainless steel screws",
-        "Slick design with dimensions of 86mm x 54mm",
-    ]
-}
-
-

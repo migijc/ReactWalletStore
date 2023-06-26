@@ -1,18 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import {RiShoppingCartLine} from 'react-icons/ri';
 import {IoMdClose} from 'react-icons/io'
-import { useNavigate, useParams } from 'react-router-dom';
-import { createNewCheckoutSessionID } from './firebaseConfig';
+import { useNavigate } from 'react-router-dom';
 
 
 
 export default function ShoppingCart(props){
-    const [totalItems, setTotalItems] = useState(0);
-    const [totalDue, setTotalDue] = useState(0);
     const [isCartOpened, setIsCartOpened] = useState(false);
     const [cartList, setCartList] = useState(null);
     const [totalCartPrice, setTotalCartPrice] = useState(0);
-    const params = useParams();
     const navigate = useNavigate();
     const testAdd = props.addItemToBag;
     const itemsInBag = props.itemsInBag;
@@ -22,10 +18,8 @@ export default function ShoppingCart(props){
     }
 
     function handleCheckoutClick(){
-        const session = createNewCheckoutSessionID();
-        const sessionID = session.id;
         navigate(
-            `/checkout/${sessionID}`,
+            '/checkout',
             {state: {itemsInCart: cartList, cartSubtotal: totalCartPrice}}
             )
     }
@@ -102,18 +96,14 @@ function ShoppingCartIcon(props){
     const [chageInCart, setChangeInCart] =useState(false);
 
     useEffect(()=>{
-        console.log('11')
-    }, [chageInCart])
-
-    useEffect(()=>{
-        setChangeInCart(!chageInCart)
+            setChangeInCart(!chageInCart)
     }, [props.totalItems])
 
     useEffect(() => {
         if(chageInCart){
             setTimeout(()=>{
                 setChangeInCart(!chageInCart)
-            }, 1300)
+            }, 850)
         }
     }, [chageInCart])
     
@@ -123,24 +113,22 @@ function ShoppingCartIcon(props){
             <div className={chageInCart ? 'cart-icon-quantity-wrapper change-in-cart' : 'cart-icon-quantity-wrapper'} style={
                 {
                     color:"white", 
-                    fontWeight: 500, 
+                    fontWeight: 600, 
                     fontSize: '.8rem', 
-                    borderRadius: '900rem',
                     display: 'flex',
                     justifyContent:'center',
                     alignItems:'center',
-                    padding: '.2rem',
+                    border: '.1rem solid rgb(245,245,245)',
+                    width: '1rem', 
+                    height: '1rem',
+                    aspectRatio:1,
+                    padding: '.5rem',
+                    borderRadius: '900rem',
                     }
                     }>
                       <p style={
                         {    
-                    textAlign:'center',
-                    height: '100%',
-                    border:'.125rem solid white',
-                    width: '1.2rem', 
-                    height: '1.2rem',
-                    // padding:'.2rem',
-                    borderRadius: '900rem',
+                    fontSize:'.7rem',
                     }
                     }> {props.totalItems}</p>
             </div>  

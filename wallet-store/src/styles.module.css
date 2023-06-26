@@ -3,8 +3,6 @@
     grid-column-end: -1;
     /* min-height: 100vh; */
     display: grid;
-    padding: 5rem;
-    padding: 1rem;
 }
 
 .currentViewReviews{
@@ -85,3 +83,5 @@
     font-size: .9rem;
     font-weight: 300;
 }
+
+

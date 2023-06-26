@@ -1,40 +1,32 @@
 import React, {useEffect, useState} from 'react';
-import { useLocation } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { stripePromise } from './StripePaymentForm';
 
 export default function ConfirmedOrder(props) {
-    const location = useLocation();
-    const searchParams = new URLSearchParams(location.search)
-    const clientSecret = searchParams.get('payment_intent_client_secret')
+    const params = useParams();
+    const payment_intent_client_secret = params.payment_intent_client_secret;
+    const confirmationNumber = params.confirmation_number;
+
     const [orderData, setOrderData] = useState(null);
 
-
+    //on first render get paymentIntent and store needed info
     useEffect(()=> {
         isOrder()
     }, [])
 
+    
     async function isOrder(){
         let stripe = await stripePromise;
-        let paymentIntentObj = await stripe.retrievePaymentIntent(clientSecret);
+        let paymentIntentObj = await stripe.retrievePaymentIntent(payment_intent_client_secret);
         const paymentIntent = paymentIntentObj.paymentIntent;
-        const shipping = paymentIntent.shipping
-
+        console.log(paymentIntent)
         const orderData = {
             totalAmountBilled: paymentIntent.amount,
-            confirmationNumber: paymentIntent.created,
-            shippingInformation: shipping,
+            confirmationNumber: confirmationNumber,
             contactEmail: paymentIntent.receipt_email,
-
+            timeOfOrder: paymentIntent.created,
         };
-
         setOrderData(orderData);
-    }
-
-    function getAddressString(){
-        return (
-            `${orderData.shippingInformation.address.line1}, ${orderData.shippingInformation.address.line2}, ${orderData.shippingInformation.address.city}, ${orderData.shippingInformation.address.state} ${orderData.shippingInformation.address.postal_code}`
-       
-        )
     }
 
 
@@ -45,13 +37,14 @@ export default function ConfirmedOrder(props) {
                 <div className='confirmation-main-content'>
                     <div className='order-info-container'>
                         <p style={{fontWeight: 600, color:'#1377cd', fontSize:'1.5rem'}}>Thank you, your order has been placed.</p>
-                        <p style={{marginTop:'-.5rem', fontWeight: 500, fontSize: '1.1rem', color:'rgb(90,90,90)'}}>Order Number: SH-{orderData.confirmationNumber}</p>
+                        <p style={{marginTop:'-.5rem', fontWeight: 500, fontSize: '1.1rem', color:'rgb(90,90,90)'}}>Order Number: {orderData.confirmationNumber}</p>
                         <p>An email confirmation will be sent to <span style={{fontWeight: 600, textDecoration:'underline',fontStyle:'italic' }}>{orderData.contactEmail}</span>. <br/> We will send you an email with tracking information as soon as it is available.</p>
-                        <p>Your package will be delivered to:<br/> {getAddressString()} </p>
-                        <p style={{fontSize: '.80rem', padding:'1rem'}}>*Please contact our support team immediately if the address above is incorrect</p>
                     </div>
                 </div>
             </div>
         )
     }
+    return(
+        <h1>SOMETING WONG!</h1>
+    )
 }

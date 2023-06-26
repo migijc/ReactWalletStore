@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import Menu from './Menu';
 import FiveStarsDisplay from "./FiveStarsDisplay";
 import {IoIosAdd} from 'react-icons/io'
 import {HiOutlineMinus} from 'react-icons/hi'
@@ -11,6 +10,7 @@ export default function OpenedProduct(props) {
     const [currentFeaturesIcon, setCurrentFeaturesIcon] = useState(<IoIosAdd />)
     const location = useLocation();
     let state = location.state;
+
 
     //change the shown icon for open and close side menu
     useEffect(() => {
@@ -51,16 +51,16 @@ export default function OpenedProduct(props) {
                         <p className='opened-product-price'>{'$' + (state.currentProduct.price).toFixed(2)}</p>
                         <h2 className='product-sub-title'>{state.currentProduct.productType}</h2>
                     </div>
-
+{/* 
                     <div className='all-colors-container'>
                         {state.allProducts.map(product => {
                             return (
                                 <div className='available-color-container'>
-                                    <div style={{backgroundColor:product.walletColorCode}} className='available-color'/>
+                                    <div onClick={()=>handleClick(product.productID, product)} style={{backgroundColor:product.walletColorCode}} className='available-color'/>
                                 </div>
                             )
                         })}
-                    </div>
+                    </div> */}
 
                     <button onClick={()=> addItemToCart(state.currentProduct)} className='add-opened-product-button'>Add to cart</button>
 

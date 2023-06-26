@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import Router from "./components/Router";
 function App() {
   const [itemsInCart, setItemsInCart] = useState([]);
-  const [test, setTest] = useState(null)
 
   // function addItemsToCart(items) {setItemsInCart(items)}
 
@@ -23,11 +22,6 @@ function App() {
     setItemsInCart(arrCopy)
     // console.log(arrCopy)
   }
-
- 
-
-
-
 
   return (
     <div className="App">

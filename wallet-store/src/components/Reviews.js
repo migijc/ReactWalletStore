@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { db } from "./firebaseConfig";
-import { collection, getDoc, doc } from "firebase/firestore";
+import { getDoc, doc } from "firebase/firestore";
 import FiveStarsDisplay from "./FiveStarsDisplay";
 import {MdVerifiedUser} from 'react-icons/md'
 import styles from '../styles.module.css'
@@ -47,7 +47,7 @@ export default function Reviews() {
     
     if(listOfPages){
       return (
-        <div className={styles.reviewPageContainer}>
+        <div className={"reviewPageContainer"}>
             <div className={styles.currentViewReviews}>
                 <p className={styles.reviewsButtonText}> REVIEWS </p>
                 <p className={styles.totalReviewsText}> 270 </p>

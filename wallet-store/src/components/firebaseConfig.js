@@ -1,13 +1,8 @@
-// Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import {addDoc, getFirestore, updateDoc} from 'firebase/firestore';
-import { collection, doc, setDoc } from "firebase/firestore";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+import { collection, getDoc, getFirestore, updateDoc} from 'firebase/firestore';
+import { doc, setDoc } from "firebase/firestore";
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
   apiKey: "AIzaSyBSwv8wmbqWK0HII8iTGwrnQZxItzzIUsY",
   authDomain: "drei-wallets.firebaseapp.com",
@@ -40,3 +35,30 @@ export function updateCheckoutSession(id, data){
 }
 
 
+
+export async function getWalletsFromSolidCol(stringPath){
+  let docRef =doc(db, `collections/${stringPath}`);
+  let docResult = await getDoc(docRef);
+  let docData = docResult.data();
+  return docData
+}
+
+export async function getWalletPrice(){
+    let collectionRef= collection(db, 'aluminumWalletsSolid');
+    let res = await getDoc(doc(collectionRef, 'walletInfo'));
+    res = res.data();
+    const price = res.price;
+    return price
+}
+
+export async function getWalletInformation(){
+  let collectionRef= collection(db, 'aluminumWalletsSolid');
+  let res = await getDoc(doc(collectionRef, 'walletInfo'));
+  return res.data();
+}
+
+export async function getDesignsWallets(){
+  let collectionRef = collection(db, 'collections')
+  let res = await getDoc(doc(collectionRef, 'designs'))
+  return res.data()
+}

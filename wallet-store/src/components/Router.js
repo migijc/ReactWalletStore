@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Checkout from "./Checkout";
 import ConfirmedOrder from "./ConfirmedOrder";
@@ -6,7 +6,7 @@ import Home from "./Home";
 import Menu from "./Menu";
 import OpenedProduct from "./OpenedProduct";
 import Shop from "./Shop";
-// import ShoppingCart from "./ShoppingCart";
+import AboutUs from "./AboutUs"
 
 
 export default function Router(props){
@@ -19,9 +19,10 @@ export default function Router(props){
             <Routes>
                 <Route path="/" element={<Home Menu={menu} />}/>
                 <Route path="/shop" element={<Shop Menu={menu} />} />
+                <Route path="/about" element={ <AboutUs Menu={menu}/> }/>
                 <Route path="/shop/:productID" element={<OpenedProduct Menu={menu} addItemToBag={props.addItemsToCart}/>} />
-                <Route path='/checkout/:checkoutID' element={<Checkout />} />
-                <Route path="/confirmation" element={<ConfirmedOrder Menu={menu} /> } />
+                <Route path='/checkout' element={<Checkout itemsInCart={props.itemsInCart} />} />
+                <Route path="/confirmation/:payment_intent_client_secret/:confirmation_number" element={<ConfirmedOrder Menu={menu} /> } />
             </Routes>
             </BrowserRouter>
         </div>
