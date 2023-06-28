@@ -84,7 +84,7 @@ export default function Checkout(props) {
     )
 }
 
-function Logo() {
+export function Logo() {
     const navigate = useNavigate();
     return (
         <div onClick={() => navigate('/')} style={styles.logoWrapper}>
@@ -116,7 +116,7 @@ const styles = {
     logoWrapper: {
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'end',
+        justifyContent: 'center',
     },
 
     progressContainer: {

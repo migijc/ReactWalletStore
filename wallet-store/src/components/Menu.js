@@ -54,9 +54,11 @@ function OpenMenu(props){
                     <Link to={'/shop'}><li className="menu-item">Shop</li></Link>
                     <Link to={'/about'}><li className="menu-item">About us</li></Link>
                     <Link><li className="menu-item">Support</li></Link>
-                    <Link><li className="menu-item">Blog</li></Link>
+                    <Link to={'/blog'}><li className="menu-item">Blog</li></Link>
+                    <Link><li className="menu-item">Contact Us</li></Link>
                 </ul>
             </nav>
+            <Link to={'/admin'}><button className="admin-login-button">Admin Portal</button></Link>
         </div>
     )
 }
