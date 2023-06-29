@@ -11,6 +11,7 @@ import AdminLogin from "./AdminLogin";
 import AdminHome from "./AdminHome";
 import Blogs from './Blogs'
 import OpenBlogPost from "./OpenBlogPost";
+import ContactUsPage from "./ContactUsPage"
 
 
 export default function Router(props){
@@ -31,6 +32,7 @@ export default function Router(props){
                 <Route path='/admin' element={<AdminLogin/>} />
                 <Route path='/blog' element={<Blogs Menu={menu}/>} />
                 <Route path='/blog/:title/:category' element={<OpenBlogPost Menu={menu}/>} />
+                <Route path='/contact' element={<ContactUsPage Menu={menu}/>}/>
             </Routes>
             </BrowserRouter>
         </div>

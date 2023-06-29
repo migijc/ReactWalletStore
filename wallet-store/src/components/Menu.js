@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import {IoIosMenu, IoMdClose} from 'react-icons/io'
 import { Link } from "react-router-dom";
+import { Logo } from "./Checkout";
 import ShoppingCart from "./ShoppingCart";
 
 
@@ -38,6 +39,7 @@ export default function Menu(props) {
             <div className="main-system-message-container">
                 <p>{systeMessage}</p>
             </div>
+            {isMenuOpen && <div className="background-cover"></div>}
             {isMenuOpen && <OpenMenu handleMenuClick={handleMenuClick}/>}
         </div>
     )
@@ -46,8 +48,12 @@ export default function Menu(props) {
 function OpenMenu(props){
     return (
         <div className="open-menu-container">
-            <IoMdClose className="close-menu-icon" onClick={props.handleMenuClick}/>
-            <h1 className="menu-title">Menu</h1>
+            <div style={{display:'flex'}}>
+                <IoMdClose className="close-menu-icon" onClick={props.handleMenuClick}/>
+                <Logo/>
+            </div>
+
+            {/* <h1 className="menu-title">Menu</h1> */}
             <nav className="nav-wrapper">
                 <ul className="nav-item-list">
                     <Link to={'/'}><li className="menu-item">Home</li></Link>
@@ -55,7 +61,7 @@ function OpenMenu(props){
                     <Link to={'/about'}><li className="menu-item">About us</li></Link>
                     <Link><li className="menu-item">Support</li></Link>
                     <Link to={'/blog'}><li className="menu-item">Blog</li></Link>
-                    <Link><li className="menu-item">Contact Us</li></Link>
+                    <Link to={'/contact'}><li className="menu-item">Contact Us</li></Link>
                 </ul>
             </nav>
             <Link to={'/admin'}><button className="admin-login-button">Admin Portal</button></Link>

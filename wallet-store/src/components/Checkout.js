@@ -87,9 +87,9 @@ export default function Checkout(props) {
 export function Logo() {
     const navigate = useNavigate();
     return (
-        <div onClick={() => navigate('/')} style={styles.logoWrapper}>
-            <div style={styles.logo}>
-                <p>Drei</p>
+        <div className='logo-container' onClick={() => navigate('/')} style={styles.logoWrapper}>
+            <div className='logo-border'>
+                <p className='logo-text'>Drei</p>
             </div>
         </div>
     )
@@ -138,7 +138,7 @@ const styles = {
     },
 
     logo: {
-        border: '.3rem solid rgb(45, 45, 45)',
+        border: '.3rem solid var(--main-black)',
         padding: '1rem',
         // paddingBottom:'.5rem',
         aspectRatio: 1,

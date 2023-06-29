@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getWalletInformation, getWalletsFromSolidCol } from "./firebaseConfig";
+import Footer from "./Footer";
 
 export default function Shop(props){
     const navigate = useNavigate();
@@ -65,6 +66,7 @@ export default function Shop(props){
                     }
                 </div>
             </div>
+            <Footer/>
         </div>
     )
     }
