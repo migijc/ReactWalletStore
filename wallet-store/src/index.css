@@ -1563,6 +1563,7 @@ textarea {
 .contact-page{
   min-height: 100vh;
   display: grid;
+  justify-content: center;
 }
 
 .contact-content{
@@ -1646,6 +1647,10 @@ textarea {
   .review-container{
     font-size: 1rem;
     grid-template-columns: 1fr 5fr 1fr;
+  }
+
+  .contact-content{
+    margin: 0 20vw;
   }
 
   .reviewPageContainer{

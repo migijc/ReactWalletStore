@@ -11,7 +11,7 @@ export default function ContactUsPage(props){
                     <h1>Contact Us</h1>
                     <p>Looking for help with a Drei product, Recent order or any other assistance?<br/><br/> Our dedicated team will get back you as soon as possible.</p>                    
                 </div>
-
+                
                 <div className='contact-section contact-middle'>
                     <h2>Our Information</h2>
                     <p><AiOutlinePhone className='contact-icon' color='var(--main-blue)'/> 954.440.5840</p>
