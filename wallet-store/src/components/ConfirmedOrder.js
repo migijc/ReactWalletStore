@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import { useParams } from 'react-router-dom';
+import Loader from './Loader';
 import { stripePromise } from './StripePaymentForm';
 
 export default function ConfirmedOrder(props) {
@@ -45,6 +46,6 @@ export default function ConfirmedOrder(props) {
         )
     }
     return(
-        <h1>SOMETING WONG!</h1>
+        <Loader Menu={props.Menu}/>
     )
 }

@@ -25,6 +25,7 @@ function App() {
 
   return (
     <div className="App">
+
       <Router addItemsToCart={(items) => addItemToCart(items)} itemsInCart={itemsInCart} removeItemFromCart={removeItemFromCart}/>
     </div>
   );

@@ -12,6 +12,7 @@ export default function Reviews() {
     const currentPageRef = useRef(null)
 
 
+
     async function getAllReviews(){
         const docRef = doc(db, 'aluminumWallets/reviews');
         let result = await getDoc(docRef);

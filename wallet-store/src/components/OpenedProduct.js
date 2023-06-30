@@ -4,6 +4,7 @@ import FiveStarsDisplay from "./FiveStarsDisplay";
 import {IoIosAdd} from 'react-icons/io'
 import {HiOutlineMinus} from 'react-icons/hi'
 import Reviews from './Reviews';
+import Footer from './Footer';
 
 export default function OpenedProduct(props) {
     const [isFeaturesExtended, setIsFeaturesExtended] = useState(false)
@@ -84,6 +85,7 @@ export default function OpenedProduct(props) {
                 </div>
                 <Reviews />
             </div>
+            <Footer/>
         </div>
     )
 }

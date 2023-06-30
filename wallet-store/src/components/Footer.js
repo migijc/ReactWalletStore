@@ -4,7 +4,20 @@ export default function Footer() {
     
     return (
         <div className='footer-container'>
-            <p>Website created by Miguel Gil</p>
+            <div className='footer-section'>
+                <p>pages</p>
+            </div>
+
+            <div className='footer-section'>
+                <p>Get in touch</p>
+            </div>
+            
+            <div className='footer-section'>
+                <p>Join our newsletter</p>
+                <p>Learn about new products, deals and more.</p>
+                <input placeholder='Email'/>
+            </div>
+
         </div>
     )
 }

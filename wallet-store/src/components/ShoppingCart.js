@@ -109,8 +109,8 @@ function ShoppingCartIcon(props){
     
     return (
         <div onClick={() => props.stateSetter(!props.isCartOpened)} className='shopping-cart-icon-wrapper'>
-            <RiShoppingCartLine style={{color:'white', fontSize: '1.4rem'}}/>
-            <div className={chageInCart ? 'cart-icon-quantity-wrapper change-in-cart' : 'cart-icon-quantity-wrapper'} style={
+            <RiShoppingCartLine className='menu-text' />
+            <div className={chageInCart ? 'cart-icon-quantity-wrapper change-in-cart menu-text' : 'cart-icon-quantity-wrapper menu-text'} style={
                 {
                     color:"white", 
                     fontWeight: 600, 
@@ -118,7 +118,7 @@ function ShoppingCartIcon(props){
                     display: 'flex',
                     justifyContent:'center',
                     alignItems:'center',
-                    border: '.1rem solid rgb(245,245,245)',
+                    // border: '.1rem solid rgb(245,245,245)',
                     width: '1rem', 
                     height: '1rem',
                     aspectRatio:1,

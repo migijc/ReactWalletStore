@@ -19,19 +19,19 @@ export default function Menu(props) {
         <div className="menu-container">
             <div className="menu-content-wrapper">
                 <div className="menu-buttons-container">
-                {isMenuOpen===false && <div> <IoIosMenu onClick={handleMenuClick} style={{color: "white", fontSize: '2.3rem'}}/> </div>}
-                <Link><button style={{background: 'none', border: 'none', color: 'white',fontWeight: 600, fontSize: '.9rem'}}>Wallets</button></Link>         
+                {isMenuOpen===false && <div> <IoIosMenu className="menu-icon menu-text" onClick={handleMenuClick} style={{color: "white", fontSize: '2.3rem'}}/> </div>}
+                <Link><button className="menu-text" style={{background: 'none' ,border: 'none', fontWeight: 600, fontSize: '.9rem'}}>Wallets</button></Link>         
                 </div>
 
                 <div className="logo-wrapper">
-                  <div className="logo">
+                  <div className="logo menu-text">
                     <p>DREI</p>
                   </div>            
                 </div>
 
 
                 <div className="shopping-cart-wrapper">
-                    {<ShoppingCart addItemToBag={handleAddItem} itemsInBag={props.itemsInCart} removeItemFromCart={props.removeItemFromCart}/>}
+                    {<ShoppingCart className='menu-icon' addItemToBag={handleAddItem} itemsInBag={props.itemsInCart} removeItemFromCart={props.removeItemFromCart}/>}
                 </div>
             </div>
 

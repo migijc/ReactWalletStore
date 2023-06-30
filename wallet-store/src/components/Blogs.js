@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Footer from "./Footer";
 import BlogPostButtons from "./BlogPostButtons";
 import { useNavigate } from 'react-router-dom';
+import Loader from "./Loader";
 
 
 export default function Blogs(props){
@@ -18,7 +19,7 @@ export default function Blogs(props){
             })
     }, [])
 
-  
+    
 
 
     if(blogs){
@@ -71,7 +72,7 @@ export default function Blogs(props){
     } 
     else {
         return (
-            <h1>SOMETING WONG!</h1>
+            <Loader Menu={props.Menu}/>
         )
     }
 
